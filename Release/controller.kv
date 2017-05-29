@@ -1,0 +1,145 @@
+#:set default_font_size "13sp"
+<ColoredLabel@Label>:
+    font_size: '48sp'
+    color: (.6, .6, .6, 1)
+    canvas.before:
+        Color:
+            rgb: (.9, .9, .9)
+        Rectangle:
+            pos: self.x + sp(2), self.y + sp(2)
+            size: self.width - sp(4), self.height - sp(4)
+
+<ColorCheck@CheckBox>:
+    canvas.before:
+        Color:
+            rgb: 0,0,0
+        Rectangle:
+            pos:self.center_x-7, self.center_y-7
+            size:[14,14]
+
+
+ScreenManagement:
+    Controller:
+    FileOpen:
+
+
+<Controller>:
+    matrix: matrix
+    gaus: gaus
+    jacobi: jacobi
+    calc: calc
+    gen:gen
+    gr:gr
+    carousel:carousel
+    name: 'controller'
+    GridLayout:
+        cols: 2
+        BoxLayout:
+            orientation:'vertical'
+            padding: 5,10,10,5
+            BoxLayout:
+                orientation:'horizontal'
+                TextInput:
+                    id: matrix
+                    text: ''
+                    hint_text: root.template
+                    font_size: default_font_size
+                BoxLayout:
+                    orientation: 'vertical'
+                    padding: 5,0,0,0
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        Button:
+                            text: 'По умолчанию'
+                            halign: 'center'
+                            font_size: default_font_size
+                            on_press: root.default_file()
+                        Button:
+                            halign: 'center'
+                            text: 'Из Файла'
+                            font_size: default_font_size
+                            on_release: app.root.current = 'fileopen'
+                    Button:
+                        id: gen
+                        text: 'Сгенирировать'
+                        on_press: root.generate()
+                        font_size: default_font_size
+            BoxLayout:
+                orientation: 'horizontal'
+                Label:
+                    text: 'Метод Гауса'
+                    font_size: default_font_size
+                    color: 0,0,0,1
+                ColorCheck:
+                    id: gaus
+                    group: 'methods'
+                Label:
+                    text: 'Метод Якоби'
+                    font_size: default_font_size
+                    color: 0,0,0,1
+                ColorCheck:
+                    id: jacobi
+                    group: 'methods'
+            AnchorLayout:
+                anchor_x: 'center'
+                anchor_y: 'center'
+                padding: 30,0,30,5
+                BoxLayout:
+                    orientation: 'horizontal'
+                    Button:
+                        id: calc
+                        text: 'Решить'
+                        font_size: default_font_size
+                        on_press: root.calculate()
+                    Button:
+                        id:gr
+                        text: 'Показать графики'
+                        on_press: root.graphs()
+                        font_size: default_font_size
+            Label:
+                size_hint_y: None
+                text_size: self.width, None
+                height: self.texture_size[1]
+                text: root.answer
+                color: 0,0,0,1
+                font_size: default_font_size
+
+        StackLayout:
+            GridLayout:
+                size_hint_y: None
+                cols:3
+                Button:
+                    size_hint_x: None
+                    width: self.height
+                    text: 'Предыдущий'
+                    font_size: default_font_size
+                    on_release: carousel.load_previous()
+                Label:
+                    text: 'Графики'
+                    font_size: default_font_size
+                    valign: 'middle'
+                    color: 0,0,0,1
+                Button:
+                    size_hint_x: None
+                    width: self.height
+                    text: 'Следующий'
+                    font_size: default_font_size
+                    on_release: carousel.load_next()
+            BoxLayout:
+                orientation: 'vertical'
+                Carousel:
+                    id: carousel
+                    loop: 1
+                Label:
+                    size_hint_y: 0.2
+                    text: 'Blank Text'
+
+<FileOpen>:
+    canvas.before:
+        Color:
+            rgba: 0, 0, 0, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    name: 'fileopen'
+
